@@ -1,4 +1,4 @@
-FROM machina/base-alpine
+FROM behren/machina-base-alpine:latest
 
 RUN apk --update add libmagic tiff-dev jpeg-dev openjpeg-dev zlib-dev
 
