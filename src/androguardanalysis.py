@@ -101,8 +101,4 @@ class AndroguardAnalysis(Worker):
                         "type": data['type']}
                     })
 
-            # channel = self.get_channel(self.config['rabbitmq'])
-            # channel.basic_publish(exchange='machina',
-            #                            routing_key='Identifier',
-            #                            body=json.dumps(body))
             self.publish_next(body)
