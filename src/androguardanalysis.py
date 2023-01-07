@@ -6,6 +6,7 @@ import re
 from androguard.misc import AnalyzeAPK
 
 from machina.core.worker import Worker
+from machina.core.models import APK
 
 class AndroguardAnalysis(Worker):
     types = ['apk']
@@ -45,9 +46,12 @@ class AndroguardAnalysis(Worker):
         content_provider_uris = list()
 
         # Classes
-        classes = [{'name': c.name,
-                    'external': c.is_external(),
-                    'api': c.is_android_api()} for c in dx.get_classes()]
+        classes = [
+            {
+                'name': c.name,
+                'external': c.is_external(),
+                'api': c.is_android_api()
+            } for c in dx.get_classes()]
 
         # Content providers URIs
         content_uris_regexs = self.config['worker']['content_uris_regexs']
@@ -64,26 +68,46 @@ class AndroguardAnalysis(Worker):
         # Dedupe
         content_provider_uris = list(set(content_provider_uris))
 
-        updates = dict(
-            name=name,
-            package=package,
-            androidversion_code=androidversion_code,
-            androidversion_name=androidversion_name,
-            permissions=permissions,
-            activities=activities,
-            providers=providers,
-            receivers=receivers,
-            services=services,
-            min_sdk_version=min_sdk_version,
-            max_sdk_version=max_sdk_version,
-            effective_target_sdk_version=effective_target_sdk_version,
-            libraries=libraries,
-            main_activity=main_activity,
-            classes=classes,
-            content_provider_uris=content_provider_uris,
-        )
+        # updates = dict(
+        #     name=name,
+        #     package=package,
+        #     androidversion_code=androidversion_code,
+        #     androidversion_name=androidversion_name,
+        #     permissions=permissions,
+        #     activities=activities,
+        #     providers=providers,
+        #     receivers=receivers,
+        #     services=services,
+        #     min_sdk_version=min_sdk_version,
+        #     max_sdk_version=max_sdk_version,
+        #     effective_target_sdk_version=effective_target_sdk_version,
+        #     libraries=libraries,
+        #     main_activity=main_activity,
+        #     classes=classes,
+        #     content_provider_uris=content_provider_uris,
+        # )
 
-        self.update_node(data['id'], updates)
+        # self.update_node(data['id'], updates)
+        apk_obj = APK.nodes.get(uid=data['uid'])
+
+        apk_obj.name = name
+        apk_obj.package = package
+        apk_obj.androidversion_code = androidversion_code
+        apk_obj.androidversion_name = androidversion_name
+        apk_obj.permissions = permissions
+        apk_obj.activities = activities
+        apk_obj.providers = providers
+        apk_obj.receivers = receivers
+        apk_obj.services = services
+        apk_obj.min_sdk_version = min_sdk_version
+        apk_obj.max_sdk_version = max_sdk_version
+        apk_obj.effective_target_sdk_version = effective_target_sdk_version
+        apk_obj.libraries = libraries
+        apk_obj.main_activity = main_activity
+        apk_obj.classes = classes
+        apk_obj.content_provider_uris = content_provider_uris
+
+        apk_obj.save()
 
         # Files
         files = a.get_files()
@@ -97,7 +121,7 @@ class AndroguardAnalysis(Worker):
                     "origin": {
                         "ts": data['ts'],
                         "md5": data['hashes']['md5'],
-                        "id": data['id'], #I think this is the only field needed, we can grab the unique node based on id alone
+                        "uid": data['uid'], #I think this is the only field needed, we can grab the unique node based on id alone
                         "type": data['type']}
                     })
 
