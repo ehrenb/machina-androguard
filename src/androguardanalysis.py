@@ -68,28 +68,9 @@ class AndroguardAnalysis(Worker):
         # Dedupe
         content_provider_uris = list(set(content_provider_uris))
 
-        # updates = dict(
-        #     name=name,
-        #     package=package,
-        #     androidversion_code=androidversion_code,
-        #     androidversion_name=androidversion_name,
-        #     permissions=permissions,
-        #     activities=activities,
-        #     providers=providers,
-        #     receivers=receivers,
-        #     services=services,
-        #     min_sdk_version=min_sdk_version,
-        #     max_sdk_version=max_sdk_version,
-        #     effective_target_sdk_version=effective_target_sdk_version,
-        #     libraries=libraries,
-        #     main_activity=main_activity,
-        #     classes=classes,
-        #     content_provider_uris=content_provider_uris,
-        # )
-
-        # self.update_node(data['id'], updates)
+        # update apk obj
         apk_obj = APK.nodes.get(uid=data['uid'])
-
+        
         apk_obj.name = name
         apk_obj.package = package
         apk_obj.androidversion_code = androidversion_code
