@@ -1,6 +1,4 @@
-FROM behren/machina-base-alpine:latest
-
-RUN apk --update add libmagic tiff-dev jpeg-dev openjpeg-dev zlib-dev
+FROM behren/machina-base-ubuntu:latest
 
 COPY requirements.txt /tmp/
 RUN pip3 install --trusted-host pypi.org \
