@@ -23,7 +23,7 @@ class AndroguardAnalysis(Worker):
         logging.getLogger('androguard').setLevel(logging.ERROR)
 
         # resolve path
-        target = self.get_binary_path(data['ts'], data['hashes']['md5'])
+        target = self.get_binary_path(data['ts'], data['hashes']['md5'], data['type'])
         self.logger.info(f"resolved path: {target}")
 
         a, d, dx = AnalyzeAPK(target)
